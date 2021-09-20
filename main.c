@@ -6,7 +6,7 @@
 /*   By: jarrakis <jarrakis@student.21-school.ru    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/09/20 15:01:18 by jarrakis          #+#    #+#             */
-/*   Updated: 2021/09/20 19:22:25 by jarrakis         ###   ########.fr       */
+/*   Updated: 2021/09/20 21:25:53 by jarrakis         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,9 +23,11 @@ void	brainfuck(char *str)
 	char	*buff;
 	int		i;
 	int		j;
+	int		brc;
 
 	i = 0;
 	j = 0;
+	brc = 0;
 	buff = (char *)malloc(sizeof(char) * 30000);
 	if (buff == NULL)
 	{
@@ -43,7 +45,43 @@ void	brainfuck(char *str)
 		if (str[i] == '-')
 			buff[j]--;
 		if (str[i] == '.')
-			ft_print_char(buff[j]); // допилить циклы
+			ft_print_char(buff[j]);
+		if (str[i] == '[') // старт цикла
+		{
+			if (!buff[j])
+			{
+				++brc;
+				while (brc)
+				{
+					++i;
+					if (str[i] == '[')
+						++brc;
+					if (str[i] == ']')
+						--brc;
+				}
+			}
+			else
+			{}
+		}
+		else if (str[i] == ']')
+		{
+			if (!buff[j])
+			{}
+			else
+			{
+				if (str[i] == ']')
+					brc++;
+				while (brc)
+				{
+					--i;
+					if (str[i] == '[')
+						brc--;
+					if (str[i] == ']')
+						brc++;
+				}
+				--i;
+			}
+		}
 		i++;
 	}
 	free(buff);
